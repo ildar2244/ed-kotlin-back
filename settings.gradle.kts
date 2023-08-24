@@ -9,3 +9,4 @@ pluginManagement {
 }
 
 include("m1l1")
+include("ads-services")
