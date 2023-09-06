@@ -15,6 +15,6 @@ pluginManagement {
 }
 
 include("m1l1")
-include("ads-services-api-v1-jackson")
-include("ads-services-common")
-include("ads-services-mappers-v1")
+include("avito-api-v1-jackson")
+include("avito-common")
+include("avito-mappers-v1")
