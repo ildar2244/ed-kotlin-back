@@ -21,8 +21,8 @@
 
 
 ## Описание сущностей приложения
-Ad (сокр. от advertisement - объявление)
-### Ad 
+Offer (объявление услуги)
+### Offer 
 1. id
 2. category
 3. title
@@ -33,6 +33,7 @@ Ad (сокр. от advertisement - объявление)
 8. telegramId
 9. vkId
 10. contactType
+11. photo
 
 ## Архитектурная диаграмма
 ![](docs/images/diagram_arch.jpg)

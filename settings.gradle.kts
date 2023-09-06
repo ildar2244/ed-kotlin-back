@@ -15,7 +15,6 @@ pluginManagement {
 }
 
 include("m1l1")
-include("ads-services")
 include("ads-services-api-v1-jackson")
 include("ads-services-common")
 include("ads-services-mappers-v1")
