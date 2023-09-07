@@ -1,0 +1,379 @@
+openapi: 3.0.4
+info:
+  title: "Объявления услуги"
+  description: Сервис для создания и временного хранения объявлений услуг
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: offer
+    description: Объявление услуги
+paths:
+  /offer/create:
+    post:
+      tags:
+        - offer
+      summary: Create offer
+      operationId: offerCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
+  /offer/read:
+    post:
+      tags:
+        - offer
+      summary: Read offer
+      operationId: offerRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadResponse'
+  /offer/update:
+    post:
+      tags:
+        - offer
+      summary: Update offer
+      operationId: offerUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
+  /offer/delete:
+    post:
+      tags:
+        - offer
+      summary: Delete offer
+      operationId: offerDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+  /offer/search:
+    post:
+      tags:
+        - offer
+      summary: Search offer
+      operationId: offerSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+
+components:
+  schemas:
+
+    # Компоненты логгирования запросов
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/CreateRequest'
+          read: '#/components/schemas/ReadRequest'
+          update: '#/components/schemas/UpdateRequest'
+          delete: '#/components/schemas/DeleteRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/CreateResponse'
+          read:   '#/components/schemas/ReadResponse'
+          update: '#/components/schemas/UpdateResponse'
+          delete: '#/components/schemas/DeleteResponse'
+          search: '#/components/schemas/SearchResponse'
+
+    # STUBS ======================
+    RequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    RequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/AvitoDebug'
+
+    AvitoDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/RequestDebugStubs'
+
+    RequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badPhone
+        - badTelegramId
+        - badVkId
+        - cannotDelete
+
+    # Компоненты для транспортных моделей ======
+    UserId:
+      type: string
+      description: Идентификатор пользователя
+
+    OfferId:
+      type: string
+      description: Идентификатор объявления
+
+    BaseOffer:
+      type: object
+      description: Объект описывает свойства
+      properties:
+        title:
+          type: string
+          description: Заголовок объявления
+        description:
+          type: string
+          description: Описание объявления
+        price:
+          type: string
+        dateCreate:
+          type: string
+        phone:
+          type: string
+        telegramId:
+          type: string
+        vkId:
+          type: string
+
+    ## REQUEST (для запросов) ================
+    CreateObject:
+     allOf:
+       - $ref: '#/components/schemas/BaseOffer'
+
+    CreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            offer:
+              $ref: '#/components/schemas/CreateObject'
+
+    ReadObject:
+      allOf:
+        - type: object
+          properties:
+            offerId:
+              $ref: '#/components/schemas/OfferId'
+
+    ReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            offer:
+              $ref: '#/components/schemas/ReadObject'
+
+    UpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseOffer'
+        - type: object
+          properties:
+            offerId:
+              $ref: '#/components/schemas/OfferId'
+
+    UpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            offer:
+              $ref: '#/components/schemas/UpdateObject'
+
+    DeleteObject:
+      allOf:
+        - type: object
+          properties:
+            offerId:
+              $ref: '#/components/schemas/OfferId'
+
+    DeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            offer:
+              $ref: '#/components/schemas/DeleteObject'
+
+    SearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка, которая будет искаться в объявлениях
+
+    SearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            filterOffers:
+              $ref: '#/components/schemas/SearchFilter'
+
+    ## RESPONSE (для ответов) ================
+    ResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseOffer'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            offerId:
+              $ref: '#/components/schemas/OfferId'
+            ownerId:
+              $ref: '#/components/schemas/UserId'
+
+    ResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом объявления
+          properties:
+            offer:
+              $ref: '#/components/schemas/ResponseObject'
+
+    ResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            offers:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResponseObject'
+
+    CreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseSingle'
+
+    ReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseSingle'
+
+    UpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseSingle'
+
+    DeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseSingle'
+
+    SearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseMulti'
