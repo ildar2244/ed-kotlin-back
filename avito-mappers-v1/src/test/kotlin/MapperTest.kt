@@ -8,13 +8,13 @@ class MapperTest {
 
     @Test
     fun fromTransport() {
-        val req = AdCreateRequest(
+        val req = CreateRequest(
             requestId = "22",
-            debug = AdDebug(
-                mode = AdRequestDebugMode.STUB,
-                stub = AdRequestDebugStubs.SUCCESS,
+            debug = AvitoDebug(
+                mode = RequestDebugMode.STUB,
+                stub = RequestDebugStubs.SUCCESS,
             ),
-            ad = AdCreateObject(
+            offer = CreateObject(
                 title = "example title",
                 description = "some text",
                 price = "1199",
@@ -28,10 +28,10 @@ class MapperTest {
 
         assertEquals(AvitoStubs.SUCCESS, context.stubCase)
         assertEquals(AvitoWorkMode.STUB, context.workMode)
-        assertEquals("example title", context.adRequest.title)
-        assertEquals("1199", context.adRequest.price)
-        assertEquals("31.08.2023", context.adRequest.dateCreate)
-        assertEquals("best_seller", context.adRequest.telegramId)
+        assertEquals("example title", context.offerRequest.title)
+        assertEquals("1199", context.offerRequest.price)
+        assertEquals("31.08.2023", context.offerRequest.dateCreate)
+        assertEquals("best_seller", context.offerRequest.telegramId)
     }
 
     @Test
@@ -39,7 +39,7 @@ class MapperTest {
         val context = AvitoContext(
             requestId = AvitoRequestId("22"),
             command = AvitoCommand.CREATE,
-            adResponse = Offer(
+            offerResponse = Offer(
                 title = "example title",
                 description = "some text",
                 price = "1199",
@@ -57,11 +57,11 @@ class MapperTest {
             state = AvitoState.RUNNING,
         )
 
-        val req = context.toTransport() as AdCreateResponse
+        val req = context.toTransport() as CreateResponse
 
         assertEquals("22", req.requestId)
-        assertEquals("example title", req.ad?.title)
-        assertEquals("some text", req.ad?.description)
+        assertEquals("example title", req.offer?.title)
+        assertEquals("some text", req.offer?.description)
         assertEquals(1, req.errors?.size)
         assertEquals("err", req.errors?.firstOrNull()?.code)
         assertEquals("request", req.errors?.firstOrNull()?.group)

@@ -9,4 +9,5 @@ enum class AvitoCommand {
     READ,
     UPDATE,
     DELETE,
+    SEARCH,
 }

@@ -6,21 +6,21 @@ info:
 servers:
   - url: http://localhost:8080/v1
 tags:
-  - name: ad
+  - name: offer
     description: Объявление услуги
 paths:
-  /ad/create:
+  /offer/create:
     post:
       tags:
-        - ad
-      summary: Create ad
-      operationId: adCreate
+        - offer
+      summary: Create offer
+      operationId: offerCreate
       requestBody:
         description: Request body
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdCreateRequest'
+              $ref: '#/components/schemas/CreateRequest'
         required: true
       responses:
         200:
@@ -28,19 +28,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdCreateResponse'
-  /ad/read:
+                $ref: '#/components/schemas/CreateResponse'
+  /offer/read:
     post:
       tags:
-        - ad
-      summary: Read ad
-      operationId: adRead
+        - offer
+      summary: Read offer
+      operationId: offerRead
       requestBody:
         description: Request body
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdReadRequest'
+              $ref: '#/components/schemas/ReadRequest'
         required: true
       responses:
         200:
@@ -48,19 +48,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdReadResponse'
-  /ad/update:
+                $ref: '#/components/schemas/ReadResponse'
+  /offer/update:
     post:
       tags:
-        - ad
-      summary: Update ad
-      operationId: adUpdate
+        - offer
+      summary: Update offer
+      operationId: offerUpdate
       requestBody:
         description: Request body
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdUpdateRequest'
+              $ref: '#/components/schemas/UpdateRequest'
         required: true
       responses:
         200:
@@ -68,19 +68,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdUpdateResponse'
-  /ad/delete:
+                $ref: '#/components/schemas/UpdateResponse'
+  /offer/delete:
     post:
       tags:
-        - ad
-      summary: Delete ad
-      operationId: adDelete
+        - offer
+      summary: Delete offer
+      operationId: offerDelete
       requestBody:
         description: Request body
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AdDeleteRequest'
+              $ref: '#/components/schemas/DeleteRequest'
         required: true
       responses:
         200:
@@ -88,7 +88,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AdDeleteResponse'
+                $ref: '#/components/schemas/DeleteResponse'
+  /offer/search:
+    post:
+      tags:
+        - offer
+      summary: Search offer
+      operationId: offerSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
 
 components:
   schemas:
@@ -108,10 +128,10 @@ components:
       discriminator:
         propertyName: requestType
         mapping:
-          create: '#/components/schemas/AdCreateRequest'
-          read: '#/components/schemas/AdReadRequest'
-          update: '#/components/schemas/AdUpdateRequest'
-          delete: '#/components/schemas/AdDeleteRequest'
+          create: '#/components/schemas/CreateRequest'
+          read: '#/components/schemas/ReadRequest'
+          update: '#/components/schemas/UpdateRequest'
+          delete: '#/components/schemas/DeleteRequest'
 
     Error:
       type: object
@@ -151,34 +171,35 @@ components:
       discriminator:
         propertyName: responseType
         mapping:
-          create: '#/components/schemas/AdCreateResponse'
-          read:   '#/components/schemas/AdReadResponse'
-          update: '#/components/schemas/AdUpdateResponse'
-          delete: '#/components/schemas/AdDeleteResponse'
+          create: '#/components/schemas/CreateResponse'
+          read:   '#/components/schemas/ReadResponse'
+          update: '#/components/schemas/UpdateResponse'
+          delete: '#/components/schemas/DeleteResponse'
+          search: '#/components/schemas/SearchResponse'
 
     # STUBS ======================
-    AdRequestDebugMode:
+    RequestDebugMode:
       type: string
       enum:
         - prod
         - test
         - stub
 
-    AdRequestDebug:
+    RequestDebug:
       type: object
       properties:
         debug:
-          $ref: '#/components/schemas/AdDebug'
+          $ref: '#/components/schemas/AvitoDebug'
 
-    AdDebug:
+    AvitoDebug:
       type: object
       properties:
         mode:
-          $ref: '#/components/schemas/AdRequestDebugMode'
+          $ref: '#/components/schemas/RequestDebugMode'
         stub:
-          $ref: '#/components/schemas/AdRequestDebugStubs'
+          $ref: '#/components/schemas/RequestDebugStubs'
 
-    AdRequestDebugStubs:
+    RequestDebugStubs:
       type: string
       description: Перечисления всех стабов
       enum:
@@ -196,11 +217,12 @@ components:
     UserId:
       type: string
       description: Идентификатор пользователя
-    AdId:
+
+    OfferId:
       type: string
       description: Идентификатор объявления
 
-    BaseAd:
+    BaseOffer:
       type: object
       description: Объект описывает свойства
       properties:
@@ -222,114 +244,136 @@ components:
           type: string
 
     ## REQUEST (для запросов) ================
-    AdCreateObject:
+    CreateObject:
      allOf:
-       - $ref: '#/components/schemas/BaseAd'
+       - $ref: '#/components/schemas/BaseOffer'
 
-    AdCreateRequest:
+    CreateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
-            ad:
-              $ref: '#/components/schemas/AdCreateObject'
+            offer:
+              $ref: '#/components/schemas/CreateObject'
 
-    AdReadObject:
+    ReadObject:
       allOf:
         - type: object
           properties:
-            id:
-              $ref: '#/components/schemas/AdId'
+            offerId:
+              $ref: '#/components/schemas/OfferId'
 
-    AdReadRequest:
-      allOf:
-        - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
-        - type: object
-          properties:
-            ad:
-              $ref: '#/components/schemas/AdReadObject'
-
-    AdUpdateObject:
-      allOf:
-        - $ref: '#/components/schemas/BaseAd'
-        - type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/AdId'
-
-    AdUpdateRequest:
+    ReadRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
-            ad:
-              $ref: '#/components/schemas/AdUpdateObject'
+            offer:
+              $ref: '#/components/schemas/ReadObject'
 
-    AdDeleteObject:
+    UpdateObject:
       allOf:
+        - $ref: '#/components/schemas/BaseOffer'
         - type: object
           properties:
-            id:
-              $ref: '#/components/schemas/AdId'
+            offerId:
+              $ref: '#/components/schemas/OfferId'
 
-    AdDeleteRequest:
+    UpdateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/AdRequestDebug'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
-            ad:
-              $ref: '#/components/schemas/AdDeleteObject'
+            offer:
+              $ref: '#/components/schemas/UpdateObject'
+
+    DeleteObject:
+      allOf:
+        - type: object
+          properties:
+            offerId:
+              $ref: '#/components/schemas/OfferId'
+
+    DeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            offer:
+              $ref: '#/components/schemas/DeleteObject'
+
+    SearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка, которая будет искаться в объявлениях
+
+    SearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          properties:
+            filterOffers:
+              $ref: '#/components/schemas/SearchFilter'
 
     ## RESPONSE (для ответов) ================
-    AdResponseObject:
+    ResponseObject:
       allOf:
-        - $ref: '#/components/schemas/BaseAd'
+        - $ref: '#/components/schemas/BaseOffer'
         - type: object
           description: Объект, который возвращается в ответе бэкенда
           properties:
-            id:
-              $ref: '#/components/schemas/AdId'
+            offerId:
+              $ref: '#/components/schemas/OfferId'
             ownerId:
               $ref: '#/components/schemas/UserId'
 
-    AdResponseSingle:
+    ResponseSingle:
       allOf:
         - type: object
           description: Ответ с одним объектом объявления
           properties:
-            ad:
-              $ref: '#/components/schemas/AdResponseObject'
+            offer:
+              $ref: '#/components/schemas/ResponseObject'
 
-    AdResponseMulti:
+    ResponseMulti:
       allOf:
         - type: object
           description: Список найденных объектов
           properties:
-            ads:
+            offers:
               type: array
               items:
-                $ref: '#/components/schemas/AdResponseObject'
+                $ref: '#/components/schemas/ResponseObject'
 
-    AdCreateResponse:
+    CreateResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/ResponseSingle'
 
-    AdReadResponse:
+    ReadResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/ResponseSingle'
 
-    AdUpdateResponse:
+    UpdateResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/ResponseSingle'
 
-    AdDeleteResponse:
+    DeleteResponse:
       allOf:
         - $ref: '#/components/schemas/IResponse'
-        - $ref: '#/components/schemas/AdResponseSingle'
+        - $ref: '#/components/schemas/ResponseSingle'
+
+    SearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResponseMulti'

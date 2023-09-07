@@ -12,7 +12,8 @@ data class AvitoContext(
 
     var requestId: AvitoRequestId = AvitoRequestId.NONE,
     var timeStart: Instant = Instant.NONE,
-    var adRequest: Offer = Offer(),
-    var adResponse: Offer = Offer(),
-    var adsListResponse: MutableList<Offer> = mutableListOf(),
+    var offerRequest: Offer = Offer(),
+    var filterRequest: OfferFilter = OfferFilter(),
+    var offerResponse: Offer = Offer(),
+    var offersListResponse: MutableList<Offer> = mutableListOf(),
 )

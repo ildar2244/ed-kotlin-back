@@ -1,5 +1,5 @@
-import org.example.api.v1.models.AdCreateResponse
-import org.example.api.v1.models.AdResponseObject
+import org.example.api.v1.models.CreateResponse
+import org.example.api.v1.models.ResponseObject
 import org.example.api.v1.models.IResponse
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -7,9 +7,9 @@ import kotlin.test.assertEquals
 
 class ResponseSerializationTest {
 
-    private val response = AdCreateResponse(
+    private val response = CreateResponse(
         requestId = "4444",
-        ad = AdResponseObject(
+        offer = ResponseObject(
             title = "example title",
             description = "some text",
             price = "1500",
@@ -29,7 +29,7 @@ class ResponseSerializationTest {
     @Test
     fun deserialize() {
         val json = apiV1Mapper.writeValueAsString(response)
-        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as AdCreateResponse
+        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as CreateResponse
 
         assertEquals(response, obj)
     }

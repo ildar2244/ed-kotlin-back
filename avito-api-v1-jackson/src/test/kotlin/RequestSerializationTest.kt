@@ -5,13 +5,13 @@ import kotlin.test.assertEquals
 
 class RequestSerializationTest {
 
-    private val request = AdCreateRequest(
+    private val request = CreateRequest(
         requestId = "888",
-        debug = AdDebug(
-            mode = AdRequestDebugMode.STUB,
-            stub = AdRequestDebugStubs.BAD_TITLE
+        debug = AvitoDebug(
+            mode = RequestDebugMode.STUB,
+            stub = RequestDebugStubs.BAD_TITLE
         ),
-        ad = AdCreateObject(
+        offer = CreateObject(
             title = "example title",
             description = "som text",
             price = "990",
@@ -33,7 +33,7 @@ class RequestSerializationTest {
     @Test
     fun deserialize() {
         val json = apiV1Mapper.writeValueAsString(request)
-        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as AdCreateRequest
+        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as CreateRequest
 
         assertEquals(request, obj)
     }

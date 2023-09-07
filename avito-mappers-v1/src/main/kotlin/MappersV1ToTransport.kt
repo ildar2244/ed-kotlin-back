@@ -6,35 +6,43 @@ fun AvitoContext.toTransport(): IResponse = when (command) {
     AvitoCommand.READ -> toTransportRead()
     AvitoCommand.UPDATE -> toTransportUpdate()
     AvitoCommand.DELETE -> toTransportDelete()
+    AvitoCommand.SEARCH -> toTransportSearch()
     AvitoCommand.NONE -> throw UnknownAvitoCommand(command)
 }
 
-fun AvitoContext.toTransportCreate() = AdCreateResponse(
+fun AvitoContext.toTransportCreate() = CreateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == AvitoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransport(),
-    ad = adResponse.toTransport(),
+    offer = offerResponse.toTransport(),
 )
 
-fun AvitoContext.toTransportRead() = AdReadResponse(
+fun AvitoContext.toTransportRead() = ReadResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == AvitoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransport(),
-    ad = adResponse.toTransport(),
+    offer = offerResponse.toTransport(),
 )
 
-fun AvitoContext.toTransportUpdate() = AdUpdateResponse(
+fun AvitoContext.toTransportUpdate() = UpdateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == AvitoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransport(),
-    ad = adResponse.toTransport(),
+    offer = offerResponse.toTransport(),
 )
 
-fun AvitoContext.toTransportDelete() = AdDeleteResponse(
+fun AvitoContext.toTransportDelete() = DeleteResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == AvitoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransport(),
-    ad = adResponse.toTransport(),
+    offer = offerResponse.toTransport(),
+)
+
+fun AvitoContext.toTransportSearch() = SearchResponse(
+    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
+    result = if (state == AvitoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    errors = errors.toTransport(),
+    offers = offersListResponse.toTransportOffers()
 )
 
 private fun List<AvitoError>.toTransport(): List<Error>? = this
@@ -49,7 +57,7 @@ private fun AvitoError.toTransport() = Error(
     message = message.takeIf { it.isNotBlank() },
 )
 
-private fun Offer.toTransport() = AdResponseObject(
+private fun Offer.toTransport() = ResponseObject(
     title = title.takeIf { it.isNotBlank() },
     description = description.takeIf { it.isNotBlank() },
     price = price.takeIf { it.isNotBlank() },
@@ -57,7 +65,12 @@ private fun Offer.toTransport() = AdResponseObject(
     phone = phone.takeIf { it.isNotBlank() },
     telegramId = telegramId.takeIf { it.isNotBlank() },
     vkId = vkId.takeIf { it.isNotBlank() },
-    id = id.takeIf { it != OfferId.NONE }?.asString(),
+    offerId = id.takeIf { it != OfferId.NONE }?.asString(),
     ownerId = ownerId.takeIf { it != AvitoUserId.NONE }?.asString(),
 )
+
+private fun List<Offer>.toTransportOffers(): List<ResponseObject>? = this
+    .map { it.toTransport() }
+    .toList()
+    .takeIf { it.isNotEmpty() }
 
