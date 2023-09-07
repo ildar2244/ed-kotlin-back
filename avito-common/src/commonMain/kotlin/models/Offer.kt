@@ -1,8 +1,8 @@
 package models
 
-data class AdBase(
-    var id: AdId = AdId.NONE,
-    var ownerId: AdUserId = AdUserId.NONE,
+data class Offer(
+    var id: OfferId = OfferId.NONE,
+    var ownerId: AvitoUserId = AvitoUserId.NONE,
     var title: String = "",
     var description: String = "",
     var dateCreate: String = "",

@@ -1,7 +1,7 @@
 import models.*
 import org.example.api.v1.models.*
 import org.junit.Test
-import stubs.AdsStubs
+import stubs.AvitoStubs
 import kotlin.test.assertEquals
 
 class MapperTest {
@@ -23,11 +23,11 @@ class MapperTest {
             ),
         )
 
-        val context = AdsContext()
+        val context = AvitoContext()
         context.fromTransport(req)
 
-        assertEquals(AdsStubs.SUCCESS, context.stubCase)
-        assertEquals(AdsWorkMode.STUB, context.workMode)
+        assertEquals(AvitoStubs.SUCCESS, context.stubCase)
+        assertEquals(AvitoWorkMode.STUB, context.workMode)
         assertEquals("example title", context.adRequest.title)
         assertEquals("1199", context.adRequest.price)
         assertEquals("31.08.2023", context.adRequest.dateCreate)
@@ -36,10 +36,10 @@ class MapperTest {
 
     @Test
     fun toTransport() {
-        val context = AdsContext(
-            requestId = AdsRequestId("22"),
-            command = AdsCommand.CREATE,
-            adResponse = AdBase(
+        val context = AvitoContext(
+            requestId = AvitoRequestId("22"),
+            command = AvitoCommand.CREATE,
+            adResponse = Offer(
                 title = "example title",
                 description = "some text",
                 price = "1199",
@@ -47,14 +47,14 @@ class MapperTest {
                 telegramId = "best_seller",
             ),
             errors = mutableListOf(
-                AdsError(
+                AvitoError(
                     code = "err",
                     group = "request",
                     field = "title",
                     message = "wrong title",
                 )
             ),
-            state = AdsState.RUNNING,
+            state = AvitoState.RUNNING,
         )
 
         val req = context.toTransport() as AdCreateResponse

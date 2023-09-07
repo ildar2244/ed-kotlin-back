@@ -3,7 +3,7 @@ package models
 /**
  * состояние запроса
  */
-enum class AdsState {
+enum class AvitoState {
     NONE,
     RUNNING,
     FAILING,

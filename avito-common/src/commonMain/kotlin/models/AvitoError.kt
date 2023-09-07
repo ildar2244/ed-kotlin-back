@@ -1,6 +1,6 @@
 package models
 
-data class AdsError(
+data class AvitoError(
     val code: String = "",
     val group: String = "",
     val field: String = "",

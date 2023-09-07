@@ -3,7 +3,7 @@ package models
 /**
  * режим работы контекста/приложения
  */
-enum class AdsWorkMode {
+enum class AvitoWorkMode {
     PROD,
     TEST,
     STUB,

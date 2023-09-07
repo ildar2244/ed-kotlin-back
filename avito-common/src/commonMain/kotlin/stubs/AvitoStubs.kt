@@ -1,6 +1,6 @@
 package stubs
 
-enum class AdsStubs {
+enum class AvitoStubs {
     NONE,
     SUCCESS,
     NOT_FOUND,

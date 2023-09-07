@@ -3,7 +3,7 @@ package models
 /**
  * типы запросов
  */
-enum class AdsCommand {
+enum class AvitoCommand {
     NONE,
     CREATE,
     READ,
