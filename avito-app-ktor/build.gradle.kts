@@ -34,6 +34,10 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation(kotlin("test"))
 
+    //modules
+    implementation(project(":avito-common"))
+    implementation(project(":avito-biz"))
+
     //client
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-client-websockets:$ktorVersion")
@@ -60,7 +64,6 @@ dependencies {
 
     // transport models
     implementation(project(":avito-api-v1-jackson"))
-    implementation(project(":avito-common"))
     implementation(project(":avito-mappers-v1"))
 
     //other
